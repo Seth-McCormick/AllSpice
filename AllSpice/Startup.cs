@@ -40,7 +40,7 @@ namespace AllSpice
             services.AddTransient<RecipesService>();
 
             services.AddTransient<IngredientsRepository>();
-            services.AddTransient<IngredientsRepository>();
+            services.AddTransient<IngredientsService>();
 
             services.AddTransient<StepsRepository>();
             services.AddTransient<StepsService>();

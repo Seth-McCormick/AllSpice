@@ -16,9 +16,15 @@ namespace AllSpice.Controllers
     {
         private readonly RecipesService _rs;
 
-        public RecipesController(RecipesService rs)
+        private readonly IngredientsService _ingser;
+
+        private readonly StepsService _ss;
+
+        public RecipesController(RecipesService rs, IngredientsService ingser, StepsService ss)
         {
             _rs = rs;
+            _ingser = ingser;
+            _ss = ss;
         }
 
         [HttpGet]
@@ -44,11 +50,45 @@ namespace AllSpice.Controllers
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                Recipe recipe = _rs.GetById(id, userInfo.Id);
+
+                Recipe recipe = _rs.GetById(id);
                 return Ok(recipe);
             }
             catch (Exception e)
             {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/ingredients")]
+
+        public async Task<ActionResult<Ingredient>> GetIngredients(int id)
+        {
+            try
+            {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                List<Ingredient> ingredients = _ingser.GetIngredientsByRecipeId(id, userInfo.Id);
+                return Ok(ingredients);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/steps")]
+
+        public async Task<ActionResult<Step>> GetSteps(int id)
+        {
+            try
+            {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                List<Step> steps = _ss.GetStepByRecipeId(id, userInfo.Id);
+                return Ok(steps);
+            }
+            catch (Exception e)
+            {
+
                 return BadRequest(e.Message);
             }
         }
@@ -79,7 +119,7 @@ namespace AllSpice.Controllers
         [HttpPut("{id}")]
         [Authorize]
 
-        public async Task<ActionResult<Recipe>> EditAsync([FromBody] Recipe recipeData)
+        public async Task<ActionResult<Recipe>> EditAsync(int id, [FromBody] Recipe recipeData)
         {
             try
             {

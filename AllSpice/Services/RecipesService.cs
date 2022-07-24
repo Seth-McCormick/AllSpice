@@ -26,6 +26,7 @@ namespace AllSpice.Services
             {
                 throw new Exception("Invalid Id");
             }
+
             return found;
         }
 
@@ -39,7 +40,7 @@ namespace AllSpice.Services
             Recipe original = GetById(recipeData.Id);
             if (recipeData.CreatorId != original.CreatorId)
             {
-                throw new Exception("You cannot edit this")
+                throw new Exception("You cannot edit this");
             }
 
             original.Picture = recipeData.Picture ?? original.Picture;
