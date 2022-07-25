@@ -54,6 +54,11 @@ namespace AllSpice.Services
             return original;
         }
 
+        // internal List<RecipeFavoriteViewModel> GetFavoritesByAccountId(string id)
+        // {
+        //     throw new NotImplementedException();
+        // }
+
         internal Recipe Delete(int id, string userId)
         {
             Recipe original = GetById(id);
@@ -61,6 +66,11 @@ namespace AllSpice.Services
             _repo.Delete(id);
 
             return original;
+        }
+
+        internal List<RecipeFavoriteViewModel> GetFavoritesByAccountId(string userId)
+        {
+            return _repo.GetFavoritesByAccountId(userId);
         }
     }
 }

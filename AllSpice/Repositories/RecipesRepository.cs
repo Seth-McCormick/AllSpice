@@ -79,6 +79,31 @@ namespace AllSpice.Repositories
             recipeData.Id = id;
             return recipeData;
         }
+
+
+
+        internal List<RecipeFavoriteViewModel> GetFavoritesByAccountId(string userId)
+        {
+            string sql = @"
+          SELECT
+          a.*,
+          r.*,
+          f.id as FavoriteId
+          FROM favorites f
+          JOIN recipes r ON r.id = f.recipeId
+          JOIN accounts a ON a.id = r.creatorId
+          WHERE f.accountId = @userId;
+          ";
+
+            return _db.Query<Account, RecipeFavoriteViewModel, RecipeFavoriteViewModel>(sql, (profile, recipe) =>
+            {
+                recipe.Creator = profile;
+                return recipe;
+            }, new { userId }).ToList();
+        }
+
+
+
         internal void Delete(int id)
         {
             string sql = "DELETE FROM recipes WHERE id = @id LIMIT 1";
